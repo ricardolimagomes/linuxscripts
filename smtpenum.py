@@ -1,11 +1,13 @@
 
 #!/usr/bin/python
-import socket, sys
+import socket, sys, re
 
 file = open('listasmtp.txt')
-for linha in file.readlines();
+for linha in file.readlines():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((sys.argv[1],25))
+	resp = s.recv(1024)
 	s.send("VRFY "+linha)
 	resp = s.recv(1024)
-	print resp
+	if re.search('252',resp):
+		print "Usuario encontrado: " +resp.strip('252 2.0.0')
